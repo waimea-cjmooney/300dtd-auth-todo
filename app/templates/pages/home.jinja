@@ -16,26 +16,102 @@
 
 
 {% block content %}
+    {# If user logged in, show their todos #}
+    {% if session.user_id %}
+        <article>
 
-    <h1>Flask Demo App with Turso DB and User Accounts</h1>
+        <ul>
+            {% for task in tasks %}
+                <li style="display: flex;">
+                    <div id="p{{ task.priority }}">{{ task.priority }} </div> 
+                    - 
+                    {{ task.name }} 
+                    <a 
+                        onclick="return confirm('Delete task? (this action cannot be undone)')" 
+                        href="/delete/{{ task.id }}">❌
+                    </a>
+                </li>
 
-    <p>This is a simple Flask app that connects to a Turso database to save and retrieve data, and also manage user accounts. This can be used as the basis of your web app.</p>
+            {% else %}
 
-    <p>It includes...</p>
+                <p>None!</p>
 
-    <ul>
-        <li>Example routes</li>
-        <li>Example static pages</li>
-        <li>Missing page and server error pages</li>
-        <li>DB connection and error handling</li>
-        <li>Example CRUD actions: Create and Delete</li>
-        <li>User account creation</li>
-        <li>User login / logout</li>
-        <li>Adaption of menus / routes / content based on login status</li>
-        <li>Flash messages for information</li>
-    </ul>
+            {% endfor %}
+        </ul>
 
-    <a href="/things" role="button">Go to the Things...</a>
+        </article>
 
+
+        {# Only show form if user is logged in #}
+        
+        <article>
+
+            <h3>Add a New Task...</h3>
+
+            <form action="/add" method="POST">
+
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Name of new task"
+                    required
+                >
+
+                <label>Priority</label>
+                <input
+                    type="radio"
+                    name="priority"
+                    value=1
+                    id="P1"
+                    required
+                >
+                <label for="P1"><div id="P1">1</div></label>
+                <input
+                    type="radio"
+                    name="priority"
+                    value=2
+                    id="P2"
+                    required
+                >
+                <label for="P2">2</label>
+                <input
+                    type="radio"
+                    name="priority"
+                    value=3
+                    id="P3"
+                    required
+                >
+                <label for="P3">3</label>
+                <input
+                    type="radio"
+                    name="priority"
+                    value=4
+                    id="P4"
+                    required
+                >
+                <label for="P4">4</label>
+                <input
+                    type="radio"
+                    name="priority"
+                    value=5
+                    id="P5"
+                    required
+                >
+                <label for="P5">5</label>
+                <br><br>
+                <button>Add the Task</button>
+
+            </form>
+
+        </article>
+
+    {% else %}
+        <h1>Epic Todo-List</h1>
+
+        <p>Welcome to the epic todo-list app!</p>
+        <p>To get started, register an account or log in!</p>
+
+        <a href="/register" role="button">Register</a> <a href="/login" role="button">Login</a>
+    {% endif %}
 {% endblock %}
 
