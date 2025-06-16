@@ -25,11 +25,34 @@
                 <li style="display: flex;">
                     <div id="p{{ task.priority }}">{{ task.priority }} </div> 
                     - 
-                    {{ task.name }} 
+                    {# If task is completed, show it as strikethrough #}
+                    {# Otherwise, show it normally #}
+                    {% if task.completed %}
+                    <del>
+                        {{ task.name }}
+                    </del>
+                    {% else %}
+
+                    {{ task.name }}
+                    
+                    {% endif %} 
+
+                    {# If task is completed, show delete button #}
+                    {# Otherwise, show checkbox button #}
+
+                    {% if task.completed %}
+                    - ☑ - 
                     <a 
                         onclick="return confirm('Delete task? (this action cannot be undone)')" 
                         href="/delete/{{ task.id }}">❌
                     </a>
+                    {% else %}
+                    - 
+                    <a  
+                        href="/complete/{{ task.id }}">
+                       ☐
+                    </a>
+                    {% endif %}
                 </li>
 
             {% else %}

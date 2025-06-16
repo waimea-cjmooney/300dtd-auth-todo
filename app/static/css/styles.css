@@ -2,11 +2,11 @@
   User stylesheet - Building upon PicoCSS
 =====================================================*/
 
-#p1 {color: limegreen;}
-#p2 {color: yellow;}
-#p3 {color: orange;}
-#p4 {color: red;}
-#p5 {color: darkred;}
+#p1 {color: var(--pico-color-green-250);}
+#p2 {color: var(--pico-color-amber-200);}
+#p3 {color: var(--pico-color-orange-500);}
+#p4 {color: var(--pico-color-red-500);}
+#p5 {color: var(--pico-color-red-750);}
 
 /* ABOUT PAGE -------------------------------------------- */
 

@@ -28,12 +28,13 @@ init_error(app)     # Handle errors and exceptions
 @app.get("/")
 def index():
     with connect_db() as client:
-        # Get all the things from the DB
+        # Get all the tasks from the DB
         sql = """
             SELECT tasks.id,
                    tasks.name,
                    tasks.priority,
                    tasks.timestamp,
+                   tasks.completed,
                    users.name AS owner  
             
             FROM tasks
@@ -41,10 +42,10 @@ def index():
             
             WHERE tasks.user_id == ?
             
-            ORDER BY tasks.priority DESC, tasks.timestamp ASC
+            ORDER BY tasks.completed ASC, tasks.priority DESC, tasks.timestamp ASC
         """
 
-        values=[session.get("user_id")]  # Get the user_id from the session
+        values=[session.get("user_id")]  # Get the user id from the session
         result = client.execute(sql, values)
         tasks = result.rows
 
@@ -115,6 +116,28 @@ def delete_a_thing(id):
 
         # Go back to the home page
         flash("Task deleted", "success")
+        return redirect("/")
+    
+#-----------------------------------------------------------
+# Route for completeing a task, Id given in the route
+# - Restricted to logged in users
+#-----------------------------------------------------------
+@app.get("/complete/<int:id>")
+@login_required
+def complete_task(id):
+    # Get the user id from the session
+    user_id = session["user_id"]
+
+    with connect_db() as client:
+        # Delete the thing from the DB only if we own it
+        sql = """UPDATE tasks 
+                 SET completed=1
+                 WHERE id=? AND user_id=?"""
+        values = [id, user_id]
+        client.execute(sql, values)
+
+        # Go back to the home page
+        flash("Task completed", "success")
         return redirect("/")
 
 
