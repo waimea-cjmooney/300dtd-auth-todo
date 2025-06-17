@@ -40,7 +40,7 @@ def index():
             FROM tasks
             JOIN users ON tasks.user_id = users.id
             
-            WHERE tasks.user_id == ?
+            WHERE tasks.user_id == ? AND tasks.completed == 0
             
             ORDER BY tasks.completed ASC, tasks.priority DESC, tasks.timestamp ASC
         """
@@ -49,8 +49,28 @@ def index():
         result = client.execute(sql, values)
         tasks = result.rows
 
+        sql = """
+            SELECT tasks.id,
+                   tasks.name,
+                   tasks.priority,
+                   tasks.timestamp,
+                   tasks.completed,
+                   users.name AS owner  
+            
+            FROM tasks
+            JOIN users ON tasks.user_id = users.id
+            
+            WHERE tasks.user_id == ? AND tasks.completed == 1
+            
+            ORDER BY tasks.completed ASC, tasks.priority DESC, tasks.timestamp ASC
+        """
+
+        values=[session.get("user_id")]  # Get the user id from the session
+        result = client.execute(sql, values)
+        completed = result.rows
+
         # And show them on the page
-        return render_template("pages/home.jinja", tasks=tasks)
+        return render_template("pages/home.jinja", tasks=tasks, completed=completed)
 
 
 
