@@ -23,13 +23,14 @@
         <ul>
             {% for task in tasks %}
                 <li style="display: flex;">
-                    <div id="p{{ task.priority }}">{{ task.priority }} </div> 
-                    - 
-                    {{ task.name }}
                     <a  
                         href="/complete/{{ task.id }}">
-                       ☐
+                        ☐
                     </a>
+                    --
+                    <div id="p{{ task.priority }}">{{ task.priority }} </div> 
+                    -
+                    {{ task.name }}
                 </li>
 
             {% else %}
@@ -44,19 +45,18 @@
         <ul>
             {% for task in completed %}
                 <li style="display: flex;">
-                    <div id="p{{ task.priority }}">{{ task.priority }} </div> 
-                    - 
-                    <del>
-                        {{ task.name }}
-                    </del>
                     {# If task is completed, show delete button #}
-                    {# Otherwise, show checkbox button #}
-
-                    - ☑ - 
+                    ☑-
                     <a 
                         onclick="return confirm('Delete task? (this action cannot be undone)')" 
                         href="/delete/{{ task.id }}">❌
                     </a>
+                    --
+                    <div id="p{{ task.priority }}">{{ task.priority }} </div> 
+                    -
+                    <del>
+                        {{ task.name }}
+                    </del>
                 </li>
 
             {% else %}
